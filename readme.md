@@ -8,7 +8,7 @@
       Demo
     </a>
     <span> | </span>
-    <a href="https://{your-url-to-the-solution}">
+    <a href="https://github.com/lightme-fan/react-random-quote-generator">
       Solution
     </a>
   </h3>
