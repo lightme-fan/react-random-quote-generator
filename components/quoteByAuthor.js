@@ -27,7 +27,8 @@ function QuoteFromAuthor() {
     return (
         <>
             <Link to='/'>Go back to the main page</Link>
-            <ol>
+            <p>* These quotes are said by <b>{authorName}.</b></p>
+            <ol className='quote-list'>
                 {qouteAuthor
                 .map(quote => <li key={quote.id}>{quote.quoteText}</li>)}
             </ol>

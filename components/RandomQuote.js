@@ -32,6 +32,7 @@ function Quotes() {
                     <button>
                         <span>{randomQoute.quoteAuthor}</span><br/>
                         <small>{randomQoute.quoteGenre}</small>
+                        <span className='arrow'>→</span>
                     </button>
                 </Link>
             </div>

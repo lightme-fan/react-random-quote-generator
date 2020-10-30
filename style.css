@@ -40,6 +40,7 @@
 
 .author-btn {
     text-align: center;
+    position: relative;
 }
 
 .author-btn  button {
@@ -50,6 +51,17 @@
     background-color: #000000;
 }
 
+.author-btn  button > .arrow {
+    position: absolute;
+    top: 20px;
+    left: 78%;
+}
+
 .quote {
     margin-bottom: 100px;
+}
+
+.quote-list > li {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }

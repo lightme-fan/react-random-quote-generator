@@ -33968,7 +33968,9 @@ function QuoteFromAuthor() {
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
     to: "/"
-  }, "Go back to the main page"), /*#__PURE__*/_react.default.createElement("ol", null, qouteAuthor.map(quote => /*#__PURE__*/_react.default.createElement("li", {
+  }, "Go back to the main page"), /*#__PURE__*/_react.default.createElement("p", null, "* These quotes are said by ", /*#__PURE__*/_react.default.createElement("b", null, authorName, ".")), /*#__PURE__*/_react.default.createElement("ol", {
+    className: "quote-list"
+  }, qouteAuthor.map(quote => /*#__PURE__*/_react.default.createElement("li", {
     key: quote.id
   }, quote.quoteText))));
 }
@@ -34050,7 +34052,9 @@ function Quotes() {
     className: "author-btn"
   }, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
     to: `/author/${randomQoute.quoteAuthor}`
-  }, /*#__PURE__*/_react.default.createElement("button", null, /*#__PURE__*/_react.default.createElement("span", null, randomQoute.quoteAuthor), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("small", null, randomQoute.quoteGenre)))));
+  }, /*#__PURE__*/_react.default.createElement("button", null, /*#__PURE__*/_react.default.createElement("span", null, randomQoute.quoteAuthor), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("small", null, randomQoute.quoteGenre), /*#__PURE__*/_react.default.createElement("span", {
+    className: "arrow"
+  }, "\u2192")))));
 }
 
 var _default = Quotes;
@@ -34131,7 +34135,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64753" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49593" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
