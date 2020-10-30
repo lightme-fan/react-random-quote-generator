@@ -25,7 +25,7 @@
 .heading > button {
     border: none;
     background-color: transparent;
-    background-image: url('./refresh.svg');
+    background-image: url('/refresh.4751b23e.svg');
     background-repeat: no-repeat;
     background-position: 50%;
     width: 14px;
@@ -53,3 +53,5 @@
 .quote {
     margin-bottom: 100px;
 }
+
+/*# sourceMappingURL=/react-random-quote-generator.e31bb0bc.css.map */

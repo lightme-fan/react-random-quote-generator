@@ -29772,7 +29772,79 @@ if ("development" === 'production') {
 } else {
   module.exports = require('./cjs/react-dom.development.js');
 }
-},{"./cjs/react-dom.development.js":"node_modules/react-dom/cjs/react-dom.development.js"}],"node_modules/@babel/runtime/helpers/esm/inheritsLoose.js":[function(require,module,exports) {
+},{"./cjs/react-dom.development.js":"node_modules/react-dom/cjs/react-dom.development.js"}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+var bundleURL = null;
+
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
+  }
+
+  return bundleURL;
+}
+
+function getBundleURL() {
+  // Attempt to find the URL of the current script and use that as the base URL
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
+
+  return '/';
+}
+
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
+}
+
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+},{}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+var bundle = require('./bundle-url');
+
+function updateLink(link) {
+  var newLink = link.cloneNode();
+
+  newLink.onload = function () {
+    link.remove();
+  };
+
+  newLink.href = link.href.split('?')[0] + '?' + Date.now();
+  link.parentNode.insertBefore(newLink, link.nextSibling);
+}
+
+var cssTimeout = null;
+
+function reloadCSS() {
+  if (cssTimeout) {
+    return;
+  }
+
+  cssTimeout = setTimeout(function () {
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+
+    for (var i = 0; i < links.length; i++) {
+      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
+        updateLink(links[i]);
+      }
+    }
+
+    cssTimeout = null;
+  }, 50);
+}
+
+module.exports = reloadCSS;
+},{"./bundle-url":"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"style.css":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"./refresh.svg":[["refresh.4751b23e.svg","refresh.svg"],"refresh.svg"],"_css_loader":"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"node_modules/@babel/runtime/helpers/esm/inheritsLoose.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -33861,11 +33933,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
-var _reactRouter = require("react-router");
+var _reactRouterDom = require("react-router-dom");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 const quoteAuthor_URL = 'https://quote-garden.herokuapp.com/api/v2/authors/';
 const dataLength = '?page=1&limit=10';
@@ -33873,32 +33947,35 @@ const dataLength = '?page=1&limit=10';
 function QuoteFromAuthor() {
   const {
     authorName
-  } = (0, _reactRouter.useParams)();
-  const [qouteAuthor, setqouteAuthor] = useState('');
+  } = (0, _reactRouterDom.useParams)();
+  const [qouteAuthor, setqouteAuthor] = (0, _react.useState)([]);
 
   const getQuoteByAuthor = async () => {
-    const API = quoteAuthor_URL + author + dataLength;
+    const API = quoteAuthor_URL + authorName + dataLength;
     const res = await fetch(API);
     const data = await res.json();
-    setqouteAuthor(data);
-    console.log(data);
+    setqouteAuthor(data.quotes);
+    console.log(data.quotes);
   };
 
-  useEffect(() => {
+  (0, _react.useEffect)(() => {
     getQuoteByAuthor();
-  }, []); // function handleClick() {
-  // }
+  }, []);
 
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_reactRouter.Link, {
-    to: `/author/${qouteAuthor.quoteAuthor}`
-  }, "Home"), /*#__PURE__*/_react.default.createElement("div", null, qouteAuthor.map(quote => /*#__PURE__*/_react.default.createElement("p", {
+  if (!qouteAuthor) {
+    return null;
+  }
+
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+    to: "/"
+  }, "Go back to the main page"), /*#__PURE__*/_react.default.createElement("ol", null, qouteAuthor.map(quote => /*#__PURE__*/_react.default.createElement("li", {
     key: quote.id
   }, quote.quoteText))));
 }
 
 var _default = QuoteFromAuthor;
 exports.default = _default;
-},{"react":"node_modules/react/index.js","react-router":"node_modules/react-router/esm/react-router.js"}],"components/Header.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js"}],"components/Header.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -33912,59 +33989,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function Header(props) {
   return /*#__PURE__*/_react.default.createElement("header", {
+    className: "header"
+  }, /*#__PURE__*/_react.default.createElement("div", {
     className: "heading"
   }, /*#__PURE__*/_react.default.createElement("h2", null, "Random"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     value: props.value,
     onClick: props.onClick
-  }, "random"));
+  }, "random")));
 }
 
 var _default = Header;
 exports.default = _default;
-},{"react":"node_modules/react/index.js"}],"components/Quote.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireDefault(require("react"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function Quotes(props) {
-  return /*#__PURE__*/_react.default.createElement("p", {
-    className: "quote"
-  }, props.quote);
-}
-
-var _default = Quotes;
-exports.default = _default;
-},{"react":"node_modules/react/index.js"}],"components/Button.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireDefault(require("react"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function Button(props) {
-  return /*#__PURE__*/_react.default.createElement("div", {
-    className: "author-btn"
-  }, /*#__PURE__*/_react.default.createElement("button", {
-    onClick: props.onClick
-  }, /*#__PURE__*/_react.default.createElement("span", null, props.author), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("small", null, props.genre)));
-}
-
-var _default = Button;
-exports.default = _default;
-},{"react":"node_modules/react/index.js"}],"components/App.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js"}],"components/RandomQuote.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -33974,15 +34011,11 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _reactRouterDom = require("react-router-dom");
-
 var _quoteByAuthor = _interopRequireDefault(require("./quoteByAuthor"));
 
 var _Header = _interopRequireDefault(require("./Header"));
 
-var _Quote = _interopRequireDefault(require("./Quote"));
-
-var _Button = _interopRequireDefault(require("./Button"));
+var _reactRouterDom = require("react-router-dom");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33992,8 +34025,8 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 const randomQuote_URL = 'https://quote-garden.herokuapp.com/api/v2/quotes/random';
 
-function App() {
-  const [randomQoute, setRandomQoute] = (0, _react.useState)('');
+function Quotes() {
+  const [randomQoute, setRandomQoute] = (0, _react.useState)([]);
 
   const getQuote = async () => {
     const res = await fetch(randomQuote_URL);
@@ -34010,38 +34043,67 @@ function App() {
     getQuote();
   }
 
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Header.default, {
+    onClick: handleRandomButton,
+    value: randomQoute.quoteText
+  }), /*#__PURE__*/_react.default.createElement("p", null, randomQoute.quoteText), /*#__PURE__*/_react.default.createElement("div", {
+    className: "author-btn"
+  }, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+    to: `/author/${randomQoute.quoteAuthor}`
+  }, /*#__PURE__*/_react.default.createElement("button", null, /*#__PURE__*/_react.default.createElement("span", null, randomQoute.quoteAuthor), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("small", null, randomQoute.quoteGenre)))));
+}
+
+var _default = Quotes;
+exports.default = _default;
+},{"react":"node_modules/react/index.js","./quoteByAuthor":"components/quoteByAuthor.js","./Header":"components/Header.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js"}],"components/App.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _RandomQuote = _interopRequireDefault(require("./RandomQuote"));
+
+var _reactRouterDom = require("react-router-dom");
+
+var _quoteByAuthor = _interopRequireDefault(require("./quoteByAuthor"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function App() {
   return /*#__PURE__*/_react.default.createElement("article", {
     className: "container"
   }, /*#__PURE__*/_react.default.createElement(_reactRouterDom.BrowserRouter, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Switch, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
-    path: "/authors/:author"
+    path: "/author/:authorName"
   }, /*#__PURE__*/_react.default.createElement(_quoteByAuthor.default, null)), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
     path: "/"
-  }, /*#__PURE__*/_react.default.createElement(_Header.default, {
-    onClick: handleRandomButton,
-    value: randomQoute.quoteText
-  }), /*#__PURE__*/_react.default.createElement(_Quote.default, {
-    quote: randomQoute.quoteText
-  }), /*#__PURE__*/_react.default.createElement(_Button.default, {
-    author: randomQoute.quoteAuthor,
-    genre: randomQoute.quoteGenre
-  })))));
+  }, /*#__PURE__*/_react.default.createElement(_RandomQuote.default, null)))));
 }
 
 var _default = App;
 exports.default = _default;
-},{"react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","./quoteByAuthor":"components/quoteByAuthor.js","./Header":"components/Header.js","./Quote":"components/Quote.js","./Button":"components/Button.js"}],"index.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","./RandomQuote":"components/RandomQuote.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","./quoteByAuthor":"components/quoteByAuthor.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
 
+require("./style.css");
+
 var _App = _interopRequireDefault(require("./components/App"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _reactDom.default.render( /*#__PURE__*/_react.default.createElement(_App.default, null), document.getElementById('root'));
-},{"react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","./components/App":"components/App.js"}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","./style.css":"style.css","./components/App":"components/App.js"}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -34069,7 +34131,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56224" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64753" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
